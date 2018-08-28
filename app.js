@@ -16,18 +16,22 @@ const Candle = require('./candleSchema');
 
 let tokens = new Map([ ["POA", Candle.poaCandle], ["ONT", Candle.ontCandle]]);
 
-tokens.forEach((model, t) => {
-  // TODO: BTC market is ETHBTC not BTCETH
-  binance.candlesticks(t + "ETH", "5m", (error, ticks, symbol) => {
-    if (error) 
-      console.log("Oups!");
-    console.log("candlesticks()", ticks);
-    let last_tick = ticks[ticks.length - 1];
-    let [time, open, high, low, close, volume, closeTime, assetVolume, trades, buyBaseVolume, buyAssetVolume, ignored] = last_tick;
-    console.log(symbol + " last close: " + close);
-  }, {limit: 3});
+binance.websockets.candlesticks(['BNBBTC', 'ONTETH', 'ETHBTC', 'LTCBTC','EOSBTC'], "1m", (candlesticks) => {
+  let { e:eventType, E:eventTime, s:symbol, k:ticks } = candlesticks;
+  let { o:open, h:high, l:low, c:close, v:volume, n:trades, i:interval, x:isFinal, q:quoteVolume, V:buyVolume, Q:quoteBuyVolume } = ticks;
+  if (isFinal == false){
+    console.log(symbol+" "+interval+" candlestick update");
+    console.log("open: "+open);
+    console.log("high: "+high);
+    console.log("low: "+low);
+    console.log("close: "+close);
+    console.log("volume: "+volume);
+    console.log("isFinal: "+isFinal);
+  }
 });
 
+
+// saving part
 // let candle = new Candle.btcCandle({
 //   // time: {type: Date},
 //   open: 12,
@@ -37,7 +41,6 @@ tokens.forEach((model, t) => {
 //   numTrades: 11,
 //   volume: 34.5
 // });
-
 // candle.save((err) => {
 //   if (err) 
 //     console.log('Error:(');
