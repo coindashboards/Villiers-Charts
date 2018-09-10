@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 // TODO: check that all values are correct here
 
-const HeatmapSchema = new Schema({
+const heatmapSchema = new Schema({
   token: String,
   time: {type : Date, default: Date.now},
 
@@ -23,5 +23,5 @@ const HeatmapSchema = new Schema({
   day : {type : Array , "default" : []} 
 });
 
-const Heatmap = mongoose.model("Heatmap", HeatmapSchema);
+const Heatmap = mongoose.model("Heatmap", heatmapSchema);
 module.exports = Heatmap;
