@@ -3,7 +3,7 @@
 require('dotenv').config();
 // TODO: do I need to connect here or somewhere else?
 const mongoose = require('mongoose');
-const Candle = require('./../candleSchema');
+const Candle = require('./../models/candleSchema');
 
 const constants = require('./../constants.js'); 
 
@@ -20,7 +20,6 @@ let tokens = Object.keys(Candle.models);
 
 tokens.forEach(token => {
     Candle.models[token].find({"time": {$gte: new Date(2018, 8, 6)}}).sort({date: 'ascending'}).exec((err, res) => {
-        // TODO: fix error handling
         if (err){
             console.log(err);
             return;
@@ -38,6 +37,11 @@ tokens.forEach(token => {
                 console.log('%s : %s -> %s', token, res[j].time, res[j + 1].time);
                 isOk = false;
             }
+            // TODO: 
+            // [ ] take the candle date 
+            // [ ] take the next candle date 
+            // [ ] query the missing data FIXME: remember that  you might hit the query limit 
+            
         }
     });
 });

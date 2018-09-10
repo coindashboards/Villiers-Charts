@@ -12,7 +12,7 @@ mongoose.connect(process.env.MONGO_DB_URL, {useNewUrlParser: true, poolSize: 50}
     console.log('Connected to MongoDB')
 });
 
-const Candle = require('./candleSchema');
+const Candle = require('./models/candleSchema');
 let tokens = Object.keys(Candle.models);
 
 binance.websockets.candlesticks(tokens, "1m", (candlesticks) => {
