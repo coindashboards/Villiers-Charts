@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// TODO: check that all values are correct here
-
 const heatmapSchema = new Schema({
   token: String,
   time: {type : Date, default: Date.now},
