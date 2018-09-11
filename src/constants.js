@@ -1,0 +1,8 @@
+module.exports = {
+    DELTA_TIME_BETWEEN_CANDLES : 60*1000,
+    TIME_40_MINUTES: 40*60*1000, 
+    TIME_8_HOURS: 8*60*60*1000,
+    TIME_7_DAYS: 7*24*60*60*1000,
+    MONGOBD_POOLSIZE: 50,
+    AUTHOR : 'milkyklim'
+}

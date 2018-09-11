@@ -4,47 +4,37 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const binance = require('node-binance-api')();
 
+const cells = require('./src/cells.js');
 const utils = require('./utils/utils.js');
 const debugOutput = utils.debugOutput;
+const createCandle = utils.createCandle;
 
+// TODO: check if this is necessary at all
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGO_DB_URL, {useNewUrlParser: true, poolSize: 50}, (err) => {
-  if (err)
-    console.log(err);
-  else 
-    console.log('Connected to MongoDB')
-});
+const mongodbConnModule = require('./src/mongodbConnModule.js');
+const db = mongodbConnModule.connect();
 
 const Candle = require('./models/candleSchema');
 let tokens = Object.keys(Candle.models);
 
-binance.websockets.candlesticks(tokens, "1m", (candlesticks) => {
-  let { e:eventType, E:eventTime, s:pSymbol, k:pTicks } = candlesticks;
-  let { o:pOpen, h:pHigh, l:pLow, c:pClose, v:pVolume, n:pTrades, i:pInterval, x:pIsFinal, q:pQuoteVolume, V:pBuyVolume, Q:pQuoteBuyVolume } = pTicks;
-  if (pIsFinal == true){
-    // saving part
-    let candle = new Candle.models[pSymbol]({
-      // time: {type: Date},
-      open: pOpen,
-      close: pClose,
-      high: pHigh,
-      low: pLow,
-      numTrades: pTrades,
-      volume: pVolume
-    });
+const Heatmap = require('./models/heatmapSchema');
 
-    candle.save((err) => {
-      if (err) {
-        // TODO: propagate error handling
-        console.log('Error:(');
+const getCandlesticks = function(tokens, p){
+  binance.websockets.candlesticks(tokens, p, (candlestick) => {
+    // k == ticks, x == isFinal
+    let isFinal = candlestick.k.x;
+    if (isFinal == true){
+        let candle = createCandle(candlestick, p);
+        candle.save()
+        .catch((err) => console.log(err))
+        .then(() => debugOutput(candlestick));
       }
-      else{
-        // console.log('DOGE!');
-      }
-    });
+  });
+}
 
-    debugOutput(candlesticks);
-  }
+const timeframes = ['5m', '1h', '1d'];
+timeframes.forEach((p) => {
+  getCandlesticks(tokens, p);
 });
 
 console.log('DOGE!');

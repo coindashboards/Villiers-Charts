@@ -13,6 +13,7 @@ const candleSchema = new Schema({
   low: {type: Number},
   numTrades: {type: Number},
   volume: {type: Number},
+  period: {type: String}
 });
 
 const models = {};
