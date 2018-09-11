@@ -4,7 +4,6 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const binance = require('node-binance-api')();
 
-const cells = require('./src/cells.js');
 const utils = require('./utils/utils.js');
 const debugOutput = utils.debugOutput;
 const createCandle = utils.createCandle;
@@ -14,10 +13,10 @@ mongoose.Promise = global.Promise;
 const mongodbConnModule = require('./src/mongodbConnModule.js');
 const db = mongodbConnModule.connect();
 
-const Candle = require('./models/candleSchema');
+const Candle = require('./models/candleSchema.js');
 let tokens = Object.keys(Candle.models);
 
-const Heatmap = require('./models/heatmapSchema');
+// const Heatmap = require('./models/heatmapSchema.js');
 
 const getCandlesticks = function(tokens, p){
   binance.websockets.candlesticks(tokens, p, (candlestick) => {
@@ -32,7 +31,7 @@ const getCandlesticks = function(tokens, p){
   });
 }
 
-const timeframes = ['5m', '1h', '1d'];
+const timeframes = ['1m', '5m', '1h', '1d'];
 timeframes.forEach((p) => {
   getCandlesticks(tokens, p);
 });

@@ -1,12 +1,13 @@
 require('dotenv').config();
 const fs = require('fs');
+const constants = require('../src/constants'); 
 
 const mongoose = require('mongoose');
 // schema is used to write the data to the database
 const Schema = mongoose.Schema;
 
 const candleSchema = new Schema({
-  time: {type : Date, default: Date.now},
+  time: {type : Date, default: Date.now, expires: constants.EXPIRATION_TIME_SECONDS},
   open: {type: Number},
   close: {type: Number},
   high: {type: Number},
