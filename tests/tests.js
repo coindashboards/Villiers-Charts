@@ -3,7 +3,7 @@
 require('dotenv').config({path: '../.env'});
 // TODO: do I need to connect here or somewhere else?
 const mongoose = require('mongoose');
-const Candle = require('./../models/candleSchema');
+const Candle = require('../models/candleSchema');
 
 const constants = require('../src/constants'); 
 
