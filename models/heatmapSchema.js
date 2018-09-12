@@ -1,13 +1,12 @@
+const constants = require('../src/constants'); 
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const heatmapSchema = new Schema({
   token: String,
-  time: {type : Date, default: Date.now},
-
+  time: {type : Date, default: Date.now, expires: constants.EXPIRATION_TIME_SECONDS},
   volume : {type : Number }, 
   price : {type : Number},
-
   dVolume20min: {type : Number},
   dPrice20min: {type : Number},
   // 8 fields
