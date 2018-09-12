@@ -1,4 +1,32 @@
 const Candle = require('./../models/candleSchema');
+const Heatmap = require('./../models/heatmapSchema');
+
+const getDeltaVolume = function(candles, numCandles = 4){
+  // sum over the last 4 5min candles
+  let res = 0;
+  for (let j = 0; j < numCandles; j++)
+      res += candles[j].volume;
+  return res;
+}
+
+const getDeltaPrice = function(candles, numCandles = 4){
+  // close (now) subtract open (20 min ago)
+  let res = candles[0].close - candles[numCandles - 1].open;
+  return res;
+}
+
+const getCurrentPrice = function(candles){
+  // close (now)
+  let res = candles[0].close;
+  return res;
+}
+
+const getCurrentVolume = function(candles){
+  // FIXME: figure out where do we take this value from 
+  // grab it separately from the market, 
+  // since it can't be restored from candlesticks
+  return 0;
+}
 
 module.exports.debugOutput = function(candlestick){
     let { e:eventType, E:eventTime, s:symbol, k:ticks } = candlestick;
@@ -22,8 +50,19 @@ module.exports.createCandle = function(candlestick, p){
       period: p
     });
     return candle;
-  }
+}
 
-module.exports.createHeatmapRow = function(){
-  
+module.exports.createHeatmap = function(token, candles5m, candles1h, candles1d){
+  let heatmap = new Heatmap({
+    'token': token,
+    // 'time': {type : Date, default: Date.now},
+    'volume' : getCurrentVolume(candles5m),
+    'price' : getCurrentPrice(candles5m),
+    'dVolume20min': getDeltaVolume(candles5m),
+    'dPrice20min': getDeltaPrice(candles5m),
+    'min' : candles5m, 
+    'hour' : candles1h,
+    'day' : candles1d
+  })
+  return heatmap;
 }
