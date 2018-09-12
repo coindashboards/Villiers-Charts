@@ -1,8 +1,3 @@
-// TODO: 
-// [x] grab all btc markets 
-// [x] create a separate file with all markets
-// [.] write the markets\collections to the database 
-
 // TODO: need this one ?
 require('dotenv').config();
 
