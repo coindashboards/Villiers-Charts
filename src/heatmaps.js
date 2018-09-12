@@ -2,10 +2,10 @@
 
 require('dotenv').config({path: './../.env'});
 const constants = require('./constants'); 
-const utils = require('./../utils/utils.js');
+const utils = require('../utils/utils');
 
 const mongoose = require('mongoose');
-const Candle = require('./../models/candleSchema');
+const Candle = require('../models/candleSchema');
 
 // TODO: remove this part because you will be connected to the database already
 mongoose.Promise = global.Promise;
