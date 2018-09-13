@@ -22,9 +22,9 @@ const processCandles = function(token, data){
 }
 
 // constructs the entry for the database that will be used later on the web-page
-const updateHeatmap = function(date, token){
-    let timeframe = new Date(date - constants.EXPIRATION_TIME_SECONDS);
-    console.log(timeframe);
+const updateHeatmap = function(token){
+    let timeframe = new Date(new Date() - constants.EXPIRATION_TIME_SECONDS);
+    // console.log(token, timeframe);
 
     Candle.models[token].find({
         'time': { $gte: timeframe }
@@ -42,5 +42,5 @@ const updateHeatmap = function(date, token){
 tokens.forEach(token => {
     // console.log(token);
     // updateHeatmap(new Date(), token);
-    setInterval(updateHeatmap, constants.UPDATE_TIME_INTERVAL, new Date(), token);
+    setInterval(updateHeatmap, constants.UPDATE_TIME_INTERVAL, token);
 })
