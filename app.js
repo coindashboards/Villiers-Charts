@@ -12,6 +12,6 @@ mongodbConnModule.connect();
 require('./src/candlesticks');
 
 // create the heatmaps 
-// require('./src/heatmaps');
+require('./src/heatmaps');
 
 console.log('app started!');
