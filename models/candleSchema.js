@@ -1,6 +1,6 @@
-require('dotenv').config();
+// require('dotenv').config();
 const fs = require('fs');
-const constants = require('../src/constants'); 
+const constants = require('../src/constants');
 
 const mongoose = require('mongoose');
 // schema is used to write the data to the database
@@ -18,9 +18,9 @@ const candleSchema = new Schema({
 });
 
 const models = {};
-// sync read 
-fs.readFileSync(process.env.BTC_MARKETS_FILE).toString().split('\n').forEach((ticker) => { 
-    models[ticker] = mongoose.model(ticker, candleSchema, ticker); // second ticker: name of the collection 
+// sync read
+fs.readFileSync(process.env.BTC_MARKETS_FILE).toString().split('\n').forEach((ticker) => {
+    models[ticker] = mongoose.model(ticker, candleSchema, ticker); // second "ticker": name of the collection
 })
 
 module.exports = {
