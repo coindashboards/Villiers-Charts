@@ -19,8 +19,7 @@ const getCandlesticks = function(tokens, p){
   });
 }
 
-// TODO: remove 1m candlesticks 
-const timeframes = ['1m', '5m', '1h', '1d'];
+const timeframes = ['5m', '1h', '1d'];
 timeframes.forEach((p) => {
   getCandlesticks(tokens, p);
 });

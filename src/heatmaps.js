@@ -31,7 +31,6 @@ const updateHeatmap = function(token){
     }).sort({time: 'descending'}).exec().then((res) => {
         // contains all necessary candles 
         let heatmap = processCandles(token, res);
-        // TODO: save the corresponding heatmap in the collection
         heatmap.save();
     }).catch((err) => {
         console.log(token, 'triggered error');
