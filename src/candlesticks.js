@@ -10,7 +10,7 @@ const getCandlesticks = function(tokens, p){
   binance.websockets.candlesticks(tokens, p, (candlestick) => {
     // k == ticks, x == isFinal
     let isFinal = candlestick.k.x;
-    if (isFinal == true){
+    if (isFinal){
         let candle = createCandle(candlestick, p);
         candle.save()
         .catch((err) => console.log(err))
