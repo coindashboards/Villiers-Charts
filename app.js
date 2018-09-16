@@ -13,4 +13,7 @@ require('./src/candlesticks');
 // create the heatmaps
 // require('./src/heatmaps');
 
+// fix the missing candlesticks
+// require(...);
+
 console.log('app started!');

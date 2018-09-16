@@ -22,21 +22,20 @@ const getCurrentPrice = function(candles){
 }
 
 const getCurrentVolume = function(candles){
-  // FIXME: figure out where do we take this value from 
-  // grab it separately from the market, 
-  // since it can't be restored from candlesticks
+  // FIXME: should return 24 hours sliding volume
+  // for the specific token
   return 0;
 }
 
 module.exports.debugOutput = function(candlestick){
     let { e:eventType, E:eventTime, s:symbol, k:ticks } = candlestick;
     let { o:open, h:high, l:low, c:close, v:volume, n:trades, i:interval, x:isFinal, q:quoteVolume, V:buyVolume, Q:quoteBuyVolume } = ticks;
-  
+
     console.log(symbol + " " + interval + " candlestick update");
-    console.log("isFinal: %s, open: %d, high: %d, low: %d, close: %d, volume: %d", isFinal, open, high, low, close, volume)    
+    console.log("isFinal: %s, open: %d, high: %d, low: %d, close: %d, volume: %d", isFinal, open, high, low, close, volume)
 }
 
-module.exports.createCandle = function(candlestick, p){
+module.exports.createCandle = function(candlestick){
   let { e:eventType, E:eventTime, s:pSymbol, k:pTicks } = candlestick;
   let { o:pOpen, h:pHigh, l:pLow, c:pClose, v:pVolume, n:pTrades, i:pInterval, x:pIsFinal, q:pQuoteVolume, V:pBuyVolume, Q:pQuoteBuyVolume } = pTicks;
   let candle = new Candle.models[pSymbol]({
@@ -47,7 +46,7 @@ module.exports.createCandle = function(candlestick, p){
       low: pLow,
       numTrades: pTrades,
       volume: pVolume,
-      period: p
+      period: pInterval
     });
     return candle;
 }
@@ -60,7 +59,7 @@ module.exports.createHeatmap = function(token, candles5m, candles1h, candles1d){
     'price' : getCurrentPrice(candles5m),
     'dVolume20min': getDeltaVolume(candles5m),
     'dPrice20min': getDeltaPrice(candles5m),
-    'min' : candles5m, 
+    'min' : candles5m,
     'hour' : candles1h,
     'day' : candles1d
   })
