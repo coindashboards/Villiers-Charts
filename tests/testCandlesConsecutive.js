@@ -2,6 +2,8 @@
 // will be extended later on for full set of tests
 const Candle = require('../models/candleSchema');
 const constants = require('../src/constants');
+const utils = require('./../utils/utils');
+const createCandle = utils.createCandle;
 
 const getDeltaTime =  function (candles, idx) {
   // websockets, sometimes, reply with the delay + there might be difference in milliseconds
@@ -9,36 +11,80 @@ const getDeltaTime =  function (candles, idx) {
   return candles[idx].time.setSeconds(0, 0) - candles[idx + 1].time.setSeconds(0,0);
 }
 
-// TODO: move this to repair.js
-const getCandlesFromTo = function(fromCandle, toCandle){
-  // we pad the candles with +/-30 secs to be sure that we capture everything
+// TODO: stress test this one
+const getFromTo = function(fromCandleTime, toCandleTime){
+  let from = new Date(fromCandleTime.getTime() + constants.TIME_30_SECONDS);
+  let to = new Date(toCandleTime.getTime() - constants.TIME_30_SECONDS);
+  return {'from': from, 'to': to};
+}
 
+const copyCandles = function(candlesticks){
+  let newCandles = [];
+  candlesticks.forEach(candlestick => {
+    let candle = createCandle(candlestick);
+    newCandles.push(candle);
+    // DEBUG: only
+    debugOutput(candlestick);
+  });
+  return newCandles;
+}
+
+// TODO: move this to repair.js
+// TODO: rewrite with catch .. then
+const getCandlesFromTo = function(token, period = '5m', fromCandleTime, toCandleTime){
+  // we pad the candles with +/-30 secs to be sure that we capture everything
+  let timeBoundaries = getFromTo(fromCandleTime, toCandleTime);
+
+  console.log(timeBoundaries);
+
+  let missingCandles = [];
+  binance.candlesticks(token, period, (error, candlesticks, symbol) => {
+    if (error) console.log(error);
+    // missingCandles = copyCandles(candlesticks);
+  }, {startTime: timeBoundaries.from, endTime: timeBoundaries.to});
+  return missingCandles;
 }
 
 const getMissingCandles = function(token, candles, period){
   let isOk = true;
-  let n = candles.length;
-  for (let j = 0; j < n - 1; j++){
-      let dT = getDeltaTime(candles, idx);
+  // first accumulate after that putt them in the database
+  let allMissingCandles = [];
+  for (let j = 0; j < candles.length - 1; j++){
+      let dT = getDeltaTime(candles, j);
       if (dT != period){
           // TODO: add some self repairing mechanism
-          console.log('%s : %s -> %s', token, candles[j].time, candles[j + 1].time);
           isOk = false;
+          console.log('%s : %s -> %s', token, candles[j].time, candles[j + 1].time);
+          let missingCandles = getCandlesFromTo(token, period, candles[j + 1].time, candles[j].time);
+          // // HACK: or should ot be that way?
+          // allMissingCandles = allMissingCandles.concat(missingCandles);
+          // // TODO: write the missing candle to the database
+
       }
   }
+  return allMissingCandles;
+}
+
+const saveCandlesToDatabase = function(candles){
+  candles.forEach(candle => {
+    candle.save()
+      .catch((err) => console.log(err))
+      .then(() => debugOutput(candlestick));
+  });
 }
 
 // this one tests that candles in the database are fine
 const testTokenCandlesConsecutive = function(token){
   let timeframe = new Date(new Date() - constants.EXPIRATION_TIME_SECONDS);
   Candle.models[token].find({
-      'time': { $gte: timeframe }, 'period' : '1m'
+      'time': { $gte: timeframe }, 'period' : '5m'
   }).sort({time: 'descending'}).exec().then((data) => {
       // contains all necessary candles
 
-      let missingCandles = [];
-      getMissingCandles(token, data, 60000); // constants.DELTA_TIME_BETWEEN_CANDLES);
-
+      let allMissingCandles = [];
+      allMissingCandles = getMissingCandles(token, data, 60000); // constants.DELTA_TIME_BETWEEN_CANDLES);
+      // TODO: Uncomment once done
+      //saveCandlesToDatabase(allMissingCandles);
   }).catch((err) => {
       console.log(token, 'triggered error');
   });
