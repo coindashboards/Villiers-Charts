@@ -4,7 +4,7 @@
   "description": "Package that handles heatmaps tab on coindashboards.com webpage",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "milkyklim",
   "license": "ISC",
@@ -14,5 +14,9 @@
     "mongoose": "^5.2.9",
     "node-binance-api": "^0.8.1",
     "socket.io": "^2.1.1"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
   }
 }
