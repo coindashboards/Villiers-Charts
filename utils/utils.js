@@ -35,6 +35,13 @@ module.exports.debugOutput = function(candlestick){
     console.log("isFinal: %s, open: %d, high: %d, low: %d, close: %d, volume: %d", isFinal, open, high, low, close, volume)
 }
 
+module.exports.debugOutputFromAPI = function(candlestick, pSymbol, pInterval){
+  let [pTime, pOpen, pHigh, pLow, pClose, pVolume, pCloseTime, pAssetVolume, pTrades, pBuyBaseVolume, pBuyAssetVolume, pIgnored] = candlestick;
+
+  console.log(pSymbol + " " + pInterval + " candlestick update");
+  console.log("isFinal: %s, open: %d, high: %d, low: %d, close: %d, volume: %d", true, pOpen, pHigh, pLow, pClose, pVolume)
+}
+
 module.exports.createCandle = function(candlestick){
   let { e:eventType, E:eventTime, s:pSymbol, k:pTicks } = candlestick;
   let { o:pOpen, h:pHigh, l:pLow, c:pClose, v:pVolume, n:pTrades, i:pInterval, x:pIsFinal, q:pQuoteVolume, V:pBuyVolume, Q:pQuoteBuyVolume } = pTicks;
@@ -49,6 +56,21 @@ module.exports.createCandle = function(candlestick){
       period: pInterval
     });
     return candle;
+}
+
+module.exports.createCandleFromAPI = function(candlestick, pSymbol, pInterval){
+  let [pTime, pOpen, pHigh, pLow, pClose, pVolume, pCloseTime, pAssetVolume, pTrades, pBuyBaseVolume, pBuyAssetVolume, pIgnored] = candlestick;
+  let candle = new Candle.models[pSymbol]({
+    // time: {type: Date},
+    open: pOpen,
+    close: pClose,
+    high: pHigh,
+    low: pLow,
+    numTrades: pTrades,
+    volume: pVolume,
+    period: pInterval
+  });
+  return candle;
 }
 
 module.exports.createHeatmap = function(token, candles5m, candles1h, candles1d){
