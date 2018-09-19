@@ -1,7 +1,7 @@
 // this script is mainly for test purposes
 // will be extended later on for full set of tests
-var expect = require('chai').expect;
-var assert = require('chai').assert;
+const expect = require('chai').expect;
+const assert = require('chai').assert;
 
 const Candle = require('../models/candleSchema');
 const constants = require('../src/constants');
@@ -10,8 +10,8 @@ const repair = require('./../src/repair');
 const getDeltaTime = repair.getDeltaTime;
 const getFromTo = repair.getFromTo;
 
-describe('testGetDeltaTime', () => {
-  it('should return delta time between 2 consequitive candles', () => {
+describe('getDeltaTime()', () => {
+  it('should return delta time between 2 consecutive candles', () => {
     // 1. arrange
     let ticker = 'ADABTC';
     let candle1 = new Candle.models[ticker]({
@@ -36,7 +36,7 @@ describe('testGetDeltaTime', () => {
       period: '5m'
     });
 
-    let candles = [candle3, candle2, candle1];
+    let candles = [candle1, candle2, candle3];
     let idx = [0, 1];
     let gotDelta = [];
     // 2. act
@@ -48,7 +48,7 @@ describe('testGetDeltaTime', () => {
   });
 });
 
-describe('testGetFromTo', () => {
+describe('getFromTo()', () => {
   it('should return time from one candle to another (padded by a bit)', () => {
     // 1. arrange
     let fromCandleTime = new Date('September 18, 2018 07:30:00');
@@ -61,6 +61,8 @@ describe('testGetFromTo', () => {
   });
 });
 
-
-
-
+describe.skip('dummy test', () => {
+  it('should be skipped', () => {
+    assert.isAtLeast(2,2);
+  });
+});
