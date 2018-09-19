@@ -22,8 +22,7 @@ const getCurrentPrice = function(candles){
 }
 
 const getCurrentVolume = function(candles){
-  // FIXME: should return 24 hours sliding volume
-  // for the specific token
+  let res = candles[0].volume;
   return 0;
 }
 
@@ -77,7 +76,7 @@ module.exports.createHeatmap = function(token, candles5m, candles1h, candles1d){
   let heatmap = new Heatmap({
     'token': token,
     // 'time': {type : Date, default: Date.now},
-    'volume' : getCurrentVolume(candles5m),
+    'volume' : getCurrentVolume(candles1d), // 24h hour volume
     'price' : getCurrentPrice(candles5m),
     'dVolume20min': getDeltaVolume(candles5m),
     'dPrice20min': getDeltaPrice(candles5m),
