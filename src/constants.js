@@ -1,6 +1,6 @@
 module.exports = {
     UPDATE_TIME_INTERVAL : 5 * 60 * 1000,
-    DELTA_TIME_BETWEEN_CANDLES : 5 * 60 * 1000, // TODO: should it be 5 * 60 * 1000 not 60 * 1000?
+    DELTA_TIME_BETWEEN_CANDLES : 5 * 60 * 1000,
     TIME_1_MINUTE: 60 * 1000,
     TIME_30_SECONDS: 30 * 1000,
     TIME_40_MINUTES: 40 * 60 * 1000,
@@ -11,6 +11,9 @@ module.exports = {
     NUM_5M_CANDLES: 8,
     NUM_1H_CANDLES: 8 * 60 / 5,
     NUM_1D_CANDLES: 7 * 24 * 60 / 5,
+
+    NUM_5M_CANDLES_PER_1H_CANDLES: 60 / 5,
+    NUM_5M_CANDLES_PER_1D_CANDLES: 24 * 60 / 5,
 
     MONGODB_POOLSIZE: 50,
     AUTHOR : 'milkyklim'
