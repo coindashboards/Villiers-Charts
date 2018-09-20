@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const constants = require('../src/constants');
 
-describe('CONSTANTS', () => {
+describe('Constants:', () => {
   it('check that all constants contain expected values', () => {
     expect(constants.UPDATE_TIME_INTERVAL).to.be.equal(5 * 60 * 1000);
     expect(constants.DELTA_TIME_BETWEEN_CANDLES).to.be.equal(5 * 60 * 1000);
@@ -16,7 +16,7 @@ describe('CONSTANTS', () => {
     expect(constants.NUM_1H_CANDLES).to.be.equal(8 * 60 / 5);
     expect(constants.NUM_1D_CANDLES).to.be.equal(7 * 24 * 60 / 5);
     // subject of change
-    expect(constants.MONGOBD_POOLSIZE).to.be.equal(50);
+    expect(constants.MONGODB_POOLSIZE).to.be.equal(50);
   });
 });
 

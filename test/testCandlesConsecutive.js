@@ -1,5 +1,7 @@
-// this script is mainly for test purposes
-// will be extended later on for full set of tests
+const path = require('path');
+const dotEnvPath = path.resolve('./.env');
+require('dotenv').config({path: dotEnvPath})
+
 const expect = require('chai').expect;
 const assert = require('chai').assert;
 
