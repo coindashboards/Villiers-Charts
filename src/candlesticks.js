@@ -1,6 +1,6 @@
 const binance = require('node-binance-api')();
 const utils = require('./../utils/utils');
-const debugOutput = utils.debugOutput;
+// const debugOutput = utils.debugOutput;
 const createCandle = utils.createCandle;
 
 const Candle = require('./../models/candleSchema');
@@ -13,6 +13,8 @@ binance.websockets.candlesticks(tokens, '5m', (candlestick) => {
       let candle = createCandle(candlestick);
       candle.save()
       .catch((err) => console.log(err))
-      .then(() => debugOutput(candlestick));
+      .then(() => {
+        // debugOutput(candlestick);
+      });
     }
 });
