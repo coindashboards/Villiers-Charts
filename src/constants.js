@@ -7,6 +7,11 @@ module.exports = {
     TIME_8_HOURS: 8 * 60 * 60 * 1000,
     TIME_7_DAYS: 7 * 24 * 60 * 60 * 1000,
     EXPIRATION_TIME_SECONDS: 7 * 24 * 60 * 60 * 1000 + 60 * 60 * 1000, // 7 days + 1 hour
-    MONGOBD_POOLSIZE: 50,
+
+    NUM_5M_CANDLES: 8,
+    NUM_1H_CANDLES: 8 * 60 / 5,
+    NUM_1D_CANDLES: 7 * 24 * 60 / 5,
+
+    MONGODB_POOLSIZE: 50,
     AUTHOR : 'milkyklim'
 }
