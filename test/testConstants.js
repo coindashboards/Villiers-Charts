@@ -15,6 +15,10 @@ describe('Constants:', () => {
     expect(constants.NUM_5M_CANDLES).to.be.equal(8);
     expect(constants.NUM_1H_CANDLES).to.be.equal(8 * 60 / 5);
     expect(constants.NUM_1D_CANDLES).to.be.equal(7 * 24 * 60 / 5);
+
+    expect(constants.NUM_5M_CANDLES_PER_1H_CANDLES).to.be.equal(60 / 5);
+    expect(constants.NUM_5M_CANDLES_PER_1D_CANDLES).to.be.equal(24 * 60 / 5);
+
     // subject of change
     expect(constants.MONGODB_POOLSIZE).to.be.equal(50);
   });

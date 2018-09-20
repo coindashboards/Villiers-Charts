@@ -4,6 +4,8 @@ const assert = require('chai').assert;
 const mongodbConnenctionModule = require('../src/database');
 
 const heatmaps = require('../src/heatmaps');
+const utilsHeatmaps = require('../utils/utilsHeatmaps');
+
 const constants = require('../src/constants');
 const Candle = require('../models/candleSchema');
 
@@ -36,7 +38,7 @@ describe('Check candles operations', () => {
       let numCandles = [constants.NUM_5M_CANDLES, constants.NUM_1H_CANDLES, constants.NUM_1D_CANDLES];
       let period = '5m';
       numCandles.forEach((total) => {
-          let candles = heatmaps.filterCandles(this.dbCandles, period, total);
+          let candles = heatmaps.filterCandles(this.dbCandles, total);
           expect(candles.length).to.be.equal(total);
       });
     });
@@ -47,7 +49,7 @@ describe('Check candles operations', () => {
       let step = 5;
       for (let i = 0; i < this.dbCandles.length; i += step) {
         let candlesSlice = this.dbCandles.slice(i, i + step);
-        let val = heatmaps.getOpen(candlesSlice);
+        let val = utilsHeatmaps.getOpen(candlesSlice);
         expect(val).to.be.equal(this.dbCandles[i].open);
       }
     });
@@ -56,7 +58,7 @@ describe('Check candles operations', () => {
       let step = 5;
       for (let i = 0; i < this.dbCandles.length; i += step) {
         let candlesSlice = this.dbCandles.slice(i, i + step);
-        let val = heatmaps.getClose(candlesSlice);
+        let val = utilsHeatmaps.getClose(candlesSlice);
         expect(val).to.be.equal(this.dbCandles[i + candlesSlice.length - 1].close);
       }
     });
@@ -65,9 +67,14 @@ describe('Check candles operations', () => {
       let step = 5;
       for (let i = 0; i < this.dbCandles.length; i += step) {
         let candlesSlice = this.dbCandles.slice(i, i + step);
-        let val = heatmaps.getHigh(candlesSlice);
-        let realVal = Math.max(...candlesSlice.map(x => x.high), 0);
-        expect(val).to.be.equal(realVal);
+        let val = utilsHeatmaps.getHigh(candlesSlice);
+        // explicit way to find max
+        let maxVal = 0;
+        for (let j = 0; j < candlesSlice.length; j++){
+          if (candlesSlice[j].high > maxVal)
+            maxVal = candlesSlice[j].high;
+        }
+        expect(val).to.be.equal(maxVal);
       }
     });
 
@@ -75,9 +82,15 @@ describe('Check candles operations', () => {
       let step = 5;
       for (let i = 0; i < this.dbCandles.length; i += step) {
         let candlesSlice = this.dbCandles.slice(i, i + step);
-        let val = heatmaps.getLow(candlesSlice);
-        let realVal = Math.min(...candlesSlice.map(x => x.low), Infinity);
-        expect(val).to.be.equal(realVal);
+        let val = utilsHeatmaps.getLow(candlesSlice);
+        // explicit way to find min
+        let minVal = Infinity;
+        for (let j = 0; j < candlesSlice.length; j++){
+          if (candlesSlice[j].low < minVal)
+            minVal = candlesSlice[j].low;
+        }
+
+        expect(val).to.be.equal(minVal);
       }
     });
 
@@ -85,7 +98,7 @@ describe('Check candles operations', () => {
       let step = 5;
       for (let i = 0; i < this.dbCandles.length; i += step) {
         let candlesSlice = this.dbCandles.slice(i, i + step);
-        let val = heatmaps.getNumTrades(candlesSlice);
+        let val = utilsHeatmaps.getNumTrades(candlesSlice);
         let realVal = 0;
         candlesSlice.forEach(x => realVal += x.numTrades);
         expect(val).to.be.equal(realVal);
@@ -96,12 +109,22 @@ describe('Check candles operations', () => {
       let step = 5;
       for (let i = 0; i < this.dbCandles.length; i += step) {
         let candlesSlice = this.dbCandles.slice(i, i + step);
-        let val = heatmaps.getVolume(candlesSlice);
+        let val = utilsHeatmaps.getVolume(candlesSlice);
         let realVal = 0;
         candlesSlice.forEach(x => realVal += x.volume);
         expect(val).to.be.equal(realVal);
       }
     });
+
+    it('getTime():', () => {
+      let step = 5;
+      for (let i = 0; i < this.dbCandles.length; i += step) {
+        let candlesSlice = this.dbCandles.slice(i, i + step);
+        let val = utilsHeatmaps.getTime(candlesSlice);
+        expect(val).to.be.equal(this.dbCandles[i].time);
+      }
+    });
+
   });
 
 });
