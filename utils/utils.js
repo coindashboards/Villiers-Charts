@@ -76,7 +76,7 @@ module.exports.createHeatmap = function(token, candles5m, candles1h, candles1d){
   let heatmap = new Heatmap({
     'token': token,
     // 'time': {type : Date, default: Date.now},
-    'volume' : getCurrentVolume(candles1d), // 24h hour volume
+    'volume' : 0, // FIXME: uncomment this part: // getCurrentVolume(candles1d), // 24h hour volume
     'price' : getCurrentPrice(candles5m),
     'dVolume20min': getDeltaVolume(candles5m),
     'dPrice20min': getDeltaPrice(candles5m),
